@@ -10,9 +10,7 @@
     rel="stylesheet"
     />
     <style>
-    body {
-         background-color: black;
-         }
+
     .no-padding {
          padding:0;
          }
@@ -32,38 +30,42 @@
          height: auto; /* 高度自适应，保持比例 */
          transition: opacity 0.5s ease; /* 添加过渡效果 */
          }
+         
+         .image-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background-image: url('picture/original-background.png'); /* 原始背景图 */
+    background-size: cover; /* 背景图覆盖整个容器 */
+    transition: background-image 0.5s ease; /* 平滑过渡效果 */
+}
 
-     .container img.active {
-         opacity: 1; /* 活动图片的透明度为1 */
-         }
-
-    .extra-image1 {
-         z-index: 6; /* 最上层 */
-         }
-    
-    .hover-area {
+.text-box {
     position: absolute;
-    top: 6%; /* 特定区域a的垂直位置 */
-    left: 7%; /* 特定区域a的水平位置 */
-    right:7%;
-    width: 86%; /* 特定区域a的宽度 */
-    height: 25%; /* 特定区域a的高度 */
-    cursor: pointer;
-    }
-
-    .text-box {
-    position: absolute;
-    top: 50%; /* 特定区域b的垂直位置 */
+    top: 70%; /* 距离画框下方50px */
     left: 50%;
-    transform: translateX(-50%);
+    width:80%;
+    height:fit-content;
+    transform: translateX(-50%); /* 水平居中 */
     background: rgba(255, 255, 255, 0.7); /* 半透明白底 */
-    padding: 10px;
-    border-radius: 5px;
+    padding: 20px; /* 内边距 */
+    border-radius: 10px; /* 圆角 */
     opacity: 0; /* 初始隐藏 */
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease; /* 平滑过渡 */
+    pointer-events: none; /* 防止文本框接收鼠标事件 */
     display: flex;
+    justify-content:space-around;
+}
 
-    }
+.text-box.active {
+    opacity: 1; /* 显示文本框 */
+    pointer-events: auto; /* 允许文本框接收鼠标事件 */
+}
+
+.text {
+    margin: 10px 0; /* 上下间距均等 */
+}
 
     </style>
 </head>
@@ -72,49 +74,67 @@
 <body>
 
 <!-- 主内容 -->
-<div class="container-imgBackground no-padding">
-    <div class="image-container">
+    <div class="image-container no-padding">
         <div class="image-area" id="imageArea">
+            <!-- 小焰家内景 -->
+             <img src="picture/homuHome_2.png" alt="小焰家内景">
             <!-- 画框们 -->
             <img src="picture/frames.png" alt="小焰和魔女的画框们">
         </div>
-        <div class="hover-area" id="hoverArea">
-            <div class="text-box" id="textBox">
-                <div class="text" id="text1">
-                    <p>Akemi</p>
-                    <p>这里是特定区域b的文字</p>
-                    <p>这里是特定区域b的文字</p>
-                </div>
-                <div class="text" id="text2">
-                    <p>Akemi</p>
-                    <p>这里是特定区域b的文字</p>
-                    <p>这里是特定区域b的文字</p>
-                </div>
-                <div class="text" id="text3">
-                    <p>Akemi</p>
-                    <p>这里是特定区域b的文字</p>
-                    <p>这里是特定区域b的文字</p>
-                </div>
+        <div class="text-box" id="textBox">
+            <div class="text" id="text1">
+                    <p>麻花焰</p>
+                    <p>新手时期的小焰</p>
+                    <p>和小圆是最好的朋友！</p>
+            </div>
+            <div class="text" id="text2">
+                    <p>通常焰</p>
+                    <p>最常见的小焰</p>
+                    <p>是小圆隐藏得最好的粉丝！</p>
+            </div>
+            <div class="text" id="text3">
+                    <p>恶魔焰</p>
+                    <p>■■之后的小焰</p>
+                    <p>是小圆的■■</p>
             </div>
         </div>
     </div>
-</div>
+
 <script>
-    const imageArea = document.getElementById('imageArea');
-    const hoverArea = document.getElementById('hoverArea');
-    const textBox = document.getElementById('textBox');
+const imageArea = document.getElementById('imageArea');
+const framesImage = document.querySelector('img[alt="小焰和魔女的画框们"]');
+const homuImage = document.querySelector('img[alt="小焰家内景"]'); // 获取“小焰家内景”的图像
+const textBox = document.getElementById('textBox');
 
-    hoverArea.addEventListener('mouseenter', () => {
-        imageArea.style.backgroundImage = "url('picture/homuHome_3.png')"; // 切换到背景图片2
-        imageArea.style.filter = "brightness(0.5)"; // 背景整体变暗
-        textBox.style.opacity = 1; // 显示文字框
-    });
+let timeoutId; // 用于存储定时器 ID
 
-    hoverArea.addEventListener('mouseleave', () => {
-        imageArea.style.backgroundImage = "url('picture/homuHome_2.png')"; // 切换回背景图片1
-        imageArea.style.filter = "brightness(1)"; // 恢复背景亮度
-        textBox.style.opacity = 0; // 隐藏文字框
-    });
+// 鼠标悬停事件
+framesImage.addEventListener('mouseenter', () => {
+    homuImage.style.filter = "brightness(0.5)"; // 使“小焰家内景”变暗
+
+    timeoutId = setTimeout(() => {
+        homuImage.src = 'picture/homuHome_3.png'; // 替换为新图像“小焰家内景_俯瞰”
+        homuImage.style.filter = "brightness(0.5)"; // 保持新图像“小焰家内景_俯瞰”变暗
+    }, 500); // 0.5秒后更换图像
+});
+
+// 鼠标移出事件
+framesImage.addEventListener('mouseleave', () => {
+    clearTimeout(timeoutId); // 清除定时器
+    homuImage.style.filter = "brightness(1)"; // 恢复“小焰家内景”的亮度
+    homuImage.src = 'picture/homuHome_2.png'; // 恢复原始图像
+});
+
+// 点击事件
+framesImage.addEventListener('click', () => {
+    if (textBox.classList.contains('active')) {
+        textBox.classList.remove('active'); // 隐藏文本框
+    } else {
+        textBox.classList.add('active'); // 显示文本框
+    }
+});
+
+
 
 </script>
 </body>
